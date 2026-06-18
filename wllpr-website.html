@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WLLPR — Minimalist Wallpapers</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(10,10,10,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #fafafa;
+    }
+
+    .nav-logo svg { width: 30px; height: 30px; }
+
+    .nav-logo span {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: #737373;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fafafa; }
+
+    .nav-cta {
+      background: #fafafa !important;
+      color: #0a0a0a !important;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      transition: opacity 0.2s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.85; }
+
+    .lang-toggle {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #a3a3a3;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .lang-toggle:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fafafa;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px 24px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-bg canvas { width: 100%; height: 100%; }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+    }
+
+    .app-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 48px;
+      background: linear-gradient(145deg, #fff 0%, #d4d4d4 100%);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 24px 80px rgba(0,0,0,0.6);
+    }
+
+    .app-icon svg { width: 48px; height: 48px; }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .hero .subtitle {
+      font-size: 18px;
+      color: #737373;
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+
+    .hero .description {
+      font-size: 17px;
+      line-height: 1.65;
+      color: #a3a3a3;
+      max-width: 460px;
+      margin: 0 auto 44px;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .btn-mac { background: #fafafa; color: #0a0a0a; }
+    .btn-mac:hover { background: #fff; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(255,255,255,0.12); }
+
+    .btn-win {
+      background: rgba(255,255,255,0.07);
+      color: #fafafa;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-win:hover { background: rgba(255,255,255,0.11); border-color: rgba(255,255,255,0.18); transform: translateY(-1px); }
+
+    .demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #737373;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+      margin-top: 8px;
+    }
+
+    .demo-link:hover { color: #fafafa; }
+    .demo-link svg { width: 14px; height: 14px; }
+
+    .meta {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #404040;
+      line-height: 1.6;
+    }
+
+    /* ── MODE SLIDER ── */
+    .mode-slider-section {
+      padding: 100px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #737373;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 48px;
+    }
+
+    .slider-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16 / 10;
+      cursor: col-resize;
+      user-select: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    .slider-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-dark {
+      background: linear-gradient(135deg, #171717 0%, #0a0a0a 50%, #1a1a1a 100%);
+    }
+
+    .slider-light {
+      background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 50%, #fafafa 100%);
+      clip-path: inset(0 0 0 50%);
+    }
+
+
+    .slider-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #fafafa;
+      z-index: 10;
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+    }
+
+    .slider-handle::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: #fafafa;
+      border-radius: 50%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    .slider-handle-arrows {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 11;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slider-handle-arrows svg {
+      width: 14px;
+      height: 14px;
+      stroke: #0a0a0a;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #525252;
+      font-weight: 500;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 120px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .features .section-title { margin-bottom: 16px; }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: #737373;
+      line-height: 1.6;
+      max-width: 480px;
+      margin-bottom: 56px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 32px 28px;
+      transition: all 0.25s ease;
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: #a3a3a3;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .feature-card p { font-size: 14px; color: #737373; line-height: 1.55; }
+
+    /* ── FAQ ── */
+    .faq {
+      padding: 120px 40px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .faq .section-title { margin-bottom: 48px; }
+
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #fafafa;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: left;
+      padding: 22px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+
+    .faq-question:hover { color: #a3a3a3; }
+
+    .faq-question svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      stroke: #525252;
+    }
+
+    .faq-item.open .faq-question svg { transform: rotate(45deg); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 22px; }
+
+    .faq-answer p { font-size: 14px; color: #737373; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #404040;
+    }
+
+    .footer-left svg { width: 18px; height: 18px; }
+
+    .footer-left a { color: #525252; text-decoration: none; transition: color 0.2s; }
+    .footer-left a:hover { color: #a3a3a3; }
+
+    .footer-right a { color: #404040; text-decoration: none; font-size: 12px; transition: color 0.2s; }
+    .footer-right a:hover { color: #a3a3a3; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links a:not(.nav-cta):not(.lang-toggle) { display: none; }
+      .hero { padding: 140px 20px 80px; }
+      .hero h1 { font-size: 36px; }
+      .app-icon { width: 72px; height: 72px; border-radius: 18px; margin-bottom: 36px; }
+      .app-icon svg { width: 40px; height: 40px; }
+      .buttons { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto 20px; }
+      .btn { width: 100%; justify-content: center; }
+      .mode-slider-section { padding: 60px 20px; }
+      .features { padding: 80px 20px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .faq { padding: 80px 20px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      nav, .hero-bg { display: none; }
+      body { background: #fff; color: #000; }
+      .hero { min-height: auto; padding: 40px 20px; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO FADE IN ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .fade-in-d1 { animation-delay: 0.05s; }
+    .fade-in-d2 { animation-delay: 0.1s; }
+    .fade-in-d3 { animation-delay: 0.2s; }
+    .fade-in-d4 { animation-delay: 0.3s; }
+    .fade-in-d5 { animation-delay: 0.4s; }
+    .fade-in-d6 { animation-delay: 0.5s; }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slider-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.slider-dark {
+  background-image: url('images/dark.png');
+}
+
+.slider-light {
+  background-image: url('images/light.png');
+}
+/* ── DEMO VIDEO ── */
+.demo-section {
+  padding: 100px 40px;
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.macbook-mockup {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.macbook-screen {
+  background: #000;
+  border-radius: 12px 12px 0 0;
+  border: 2px solid #2a2a2a;
+  border-bottom: none;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+.macbook-screen video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.macbook-bottom {
+  background: #171717;
+  border-radius: 0 0 12px 12px;
+  border: 2px solid #2a2a2a;
+  border-top: 1px solid #333;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.macbook-notch {
+  width: 80px;
+  height: 5px;
+  background: #2a2a2a;
+  border-radius: 0 0 4px 4px;
+}
+
+@media (max-width: 768px) {
+  .demo-section { padding: 60px 20px; }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 100 100" fill="none">
+        <rect width="100" height="100" rx="22" fill="url(#nlg)"/>
+        <path d="M50 12 C52 38, 62 48, 88 50 C62 52, 52 62, 50 88 C48 62, 38 52, 12 50 C38 48, 48 38, 50 12Z" fill="#0a0a0a"/>
+        <defs><linearGradient id="nlg" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ccc"/></linearGradient></defs>
+      </svg>
+      <span>WLLPR</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features" data-i18n="nav_features">Features</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://bypedroneres.github.io/ai/" target="_blank">Demo</a>
+      <button class="lang-toggle" id="langToggle" title="Switch language">PT</button>
+      <a href="#hero" class="nav-cta" data-i18n="nav_download">Download</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"><canvas id="bg"></canvas></div>
+
+    <div class="hero-content">
+      <div class="app-icon fade-in">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M50 8 C52.5 40, 60 47.5, 92 50 C60 52.5, 52.5 60, 50 92 C47.5 60, 40 52.5, 8 50 C40 47.5, 47.5 40, 50 8Z" fill="#0a0a0a"/>
+        </svg>
+      </div>
+
+      <h1 class="fade-in fade-in-d1">WLLPR</h1>
+      <p class="subtitle fade-in fade-in-d2" data-i18n="hero_subtitle">Minimalist Wallpaper Generator</p>
+
+      <p class="description fade-in fade-in-d3" data-i18n="hero_description">
+        Generate beautiful minimalist wallpapers for desktop and mobile.
+        No account, no clutter — just clean design.
+      </p>
+
+      <div class="buttons fade-in fade-in-d4">
+        <a href="#" class="btn btn-mac">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <span data-i18n="btn_mac">Download for Mac</span>
+        </a>
+        <a href="#" class="btn btn-win">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+          <span data-i18n="btn_win">Download for Windows</span>
+        </a>
+      </div>
+
+      <a href="https://bypedroneres.github.io/ai/" target="_blank" class="demo-link fade-in fade-in-d5">
+        <span data-i18n="btn_demo">View Demo</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+
+      <p class="meta fade-in fade-in-d6" data-i18n="hero_meta">macOS 12+ · Windows 10+ · No account required</p>
+    </div>
+  </section>
+
+  <!-- DEMO VIDEO -->
+<section class="demo-section" id="demo">
+  <p class="section-label reveal" data-i18n="demo_label">Demo</p>
+  <h2 class="section-title reveal" data-i18n="demo_title">See it in action</h2>
+
+  <div class="macbook-mockup reveal">
+    <div class="macbook-screen">
+      <video autoplay muted loop playsinline>
+        <source src="./images/demo.mov" type="video/quicktime">
+        <source src="./images/demo.mov" type="video/mp4">
+      </video>
+    </div>
+    <div class="macbook-bottom">
+      <div class="macbook-notch"></div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- DARK / LIGHT SLIDER -->
+  <section class="mode-slider-section" id="preview">
+    <p class="section-label reveal" data-i18n="slider_label">Preview</p>
+    <h2 class="section-title reveal" data-i18n="slider_title">Dark &amp; Light Mode</h2>
+
+    <div class="slider-container reveal" id="modeSlider">
+      <div class="slider-img slider-dark"></div>
+      <div class="slider-img slider-light" id="sliderLight"></div>
+      <div class="slider-handle" id="sliderHandle"></div>
+      <div class="slider-handle-arrows" id="sliderArrows">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <div class="slider-labels reveal">
+      <span data-i18n="slider_dark">Dark</span>
+      <span data-i18n="slider_light">Light</span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <p class="section-label reveal" data-i18n="nav_features">Features</p>
+    <h2 class="section-title reveal" data-i18n="features_title">Everything you need.<br>Nothing you don't.</h2>
+    <p class="section-subtitle reveal" data-i18n="features_subtitle">Built for simplicity, performance, and beautiful output.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3 data-i18n="f1_title">4K Desktop</h3>
+        <p data-i18n="f1_desc">Generate wallpapers at 3840 × 2160. Sharp on Retina and high-DPI displays.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+        </div>
+        <h3 data-i18n="f2_title">Mobile Ready</h3>
+        <p data-i18n="f2_desc">iPhone-optimized at 1290 × 2796. Perfect for lock screen and home screen.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </div>
+        <h3 data-i18n="f3_title">Light &amp; Dark</h3>
+        <p data-i18n="f3_desc">Switch between light and dark mode wallpapers. Match your system theme.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 data-i18n="f4_title">Pattern Library</h3>
+        <p data-i18n="f4_desc">Arcs, hills, waves, gradients — a growing collection of curated minimal patterns.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg>
+        </div>
+        <h3 data-i18n="f5_title">Custom Palettes</h3>
+        <p data-i18n="f5_desc">Pick your colors or generate random combinations. Every wallpaper feels unique.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3 data-i18n="f6_title">Instant Generation</h3>
+        <p data-i18n="f6_desc">One click, new wallpaper. Generate unlimited variations in seconds.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <p class="section-label reveal">FAQ</p>
+    <h2 class="section-title reveal" data-i18n="faq_title">Questions? Got it.</h2>
+
+    <div class="faq-item reveal">
+      <button class="faq-question">
+        <span data-i18n="faq1_q">Is WLLPR really free?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="faq1_a">Yes — completely free. Generate, download, and use as many wallpapers as you want. No subscriptions, no ads, no hidden costs.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-question">
+        <span data-i18n="faq2_q">Do I need to create an account?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="faq2_a">No. Just download the app and start generating wallpapers immediately. No login, no sign-up, no data collection.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-question">
+        <span data-i18n="faq3_q">What resolutions are supported?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="faq3_a">Desktop wallpapers render at 3840 × 2160 (4K). iPhone wallpapers at 1290 × 2796. Both sizes look crisp on high-DPI screens.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-question">
+        <span data-i18n="faq4_q">Can I customize the colors?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="faq4_a">Absolutely. Pick from preset palettes or create your own. Toggle between light and dark modes for every pattern.</p></div>
+    </div>
+
+    <div class="faq-item reveal">
+      <button class="faq-question">
+        <span data-i18n="faq5_q">What patterns are available?</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <div class="faq-answer"><p data-i18n="faq5_a">Arcs, hills, waves, gradients, and more — with new patterns added regularly. Each supports unlimited color and mode variations.</p></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <svg viewBox="0 0 100 100" fill="none">
+        <rect width="100" height="100" rx="22" fill="url(#fg)"/>
+        <path d="M50 12 C52 38, 62 48, 88 50 C62 52, 52 62, 50 88 C48 62, 38 52, 12 50 C38 48, 48 38, 50 12Z" fill="#0a0a0a"/>
+        <defs><linearGradient id="fg" x1="0" y1="0" x2="100" y2="100"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ccc"/></linearGradient></defs>
+      </svg>
+      © 2026 WLLPR · <a href="https://www.instagram.com/pedro___neres/" target="_blank">@pedro___neres</a>
+    </div>
+    <div class="footer-right">
+      <a href="https://www.instagram.com/pedro___neres/" target="_blank">Instagram</a>
+    </div>
+  </footer>
+
+  <script>
+    // ── i18n ──
+    var translations = {
+      en: {
+        nav_features: 'Features',
+        nav_download: 'Download',
+        hero_subtitle: 'Minimalist Wallpaper Generator',
+        hero_description: 'Generate beautiful minimalist wallpapers for desktop and mobile. No account, no clutter — just clean design.',
+        btn_mac: 'Download for Mac',
+        btn_win: 'Download for Windows',
+        btn_demo: 'View Demo',
+        hero_meta: 'macOS 12+ · Windows 10+ · No account required',
+        slider_label: 'Preview',
+        slider_title: 'Dark & Light Mode',
+        slider_dark: 'Dark',
+        slider_light: 'Light',
+        features_title: 'Everything you need.<br>Nothing you don\'t.',
+        features_subtitle: 'Built for simplicity, performance, and beautiful output.',
+        f1_title: '4K Desktop',
+        f1_desc: 'Generate wallpapers at 3840 × 2160. Sharp on Retina and high-DPI displays.',
+        f2_title: 'Mobile Ready',
+        f2_desc: 'iPhone-optimized at 1290 × 2796. Perfect for lock screen and home screen.',
+        f3_title: 'Light & Dark',
+        f3_desc: 'Switch between light and dark mode wallpapers. Match your system theme.',
+        f4_title: 'Pattern Library',
+        f4_desc: 'Arcs, hills, waves, gradients — a growing collection of curated minimal patterns.',
+        f5_title: 'Custom Palettes',
+        f5_desc: 'Pick your colors or generate random combinations. Every wallpaper feels unique.',
+        f6_title: 'Instant Generation',
+        f6_desc: 'One click, new wallpaper. Generate unlimited variations in seconds.',
+        faq_title: 'Questions? Got it.',
+        faq1_q: 'Is WLLPR really free?',
+        faq1_a: 'Yes — completely free. Generate, download, and use as many wallpapers as you want. No subscriptions, no ads, no hidden costs.',
+        faq2_q: 'Do I need to create an account?',
+        faq2_a: 'No. Just download the app and start generating wallpapers immediately. No login, no sign-up, no data collection.',
+        faq3_q: 'What resolutions are supported?',
+        faq3_a: 'Desktop wallpapers render at 3840 × 2160 (4K). iPhone wallpapers at 1290 × 2796. Both sizes look crisp on high-DPI screens.',
+        faq4_q: 'Can I customize the colors?',
+        faq4_a: 'Absolutely. Pick from preset palettes or create your own. Toggle between light and dark modes for every pattern.',
+        faq5_q: 'What patterns are available?',
+        faq5_a: 'Arcs, hills, waves, gradients, and more — with new patterns added regularly. Each supports unlimited color and mode variations.'
+      },
+      pt: {
+        nav_features: 'Recursos',
+        nav_download: 'Baixar',
+        hero_subtitle: 'Gerador de Papéis de Parede Minimalistas',
+        hero_description: 'Gere papéis de parede minimalistas e bonitos para desktop e celular. Sem conta, sem bagunça — só design limpo.',
+        btn_mac: 'Baixar para Mac',
+        btn_win: 'Baixar para Windows',
+        btn_demo: 'Ver Demo',
+        hero_meta: 'macOS 12+ · Windows 10+ · Sem necessidade de conta',
+        slider_label: 'Prévia',
+        slider_title: 'Modo Escuro e Claro',
+        slider_dark: 'Escuro',
+        slider_light: 'Claro',
+        features_title: 'Tudo o que você precisa.<br>Nada que não precisa.',
+        features_subtitle: 'Feito com simplicidade, performance e resultados bonitos.',
+        f1_title: 'Desktop 4K',
+        f1_desc: 'Gere papéis de parede em 3840 × 2160. Nítido em telas Retina e high-DPI.',
+        f2_title: 'Pronto para Mobile',
+        f2_desc: 'Otimizado para iPhone em 1290 × 2796. Perfeito para tela de bloqueio e tela inicial.',
+        f3_title: 'Claro e Escuro',
+        f3_desc: 'Alterne entre papéis de parede no modo claro e escuro. Combine com o tema do sistema.',
+        f4_title: 'Biblioteca de Padrões',
+        f4_desc: 'Arcos, colinas, ondas, gradientes — uma coleção crescente de padrões minimalistas.',
+        f5_title: 'Paletas Personalizadas',
+        f5_desc: 'Escolha suas cores ou gere combinações aleatórias. Cada papel de parede é único.',
+        f6_title: 'Geração Instantânea',
+        f6_desc: 'Um clique, novo papel de parede. Gere variações ilimitadas em segundos.',
+        faq_title: 'Perguntas? Respondidas.',
+        faq1_q: 'O WLLPR é realmente gratuito?',
+        faq1_a: 'Sim — totalmente gratuito. Gere, baixe e use quantos papéis de parede quiser. Sem assinaturas, sem anúncios, sem custos ocultos.',
+        faq2_q: 'Preciso criar uma conta?',
+        faq2_a: 'Não. Basta baixar o app e começar a gerar papéis de parede imediatamente. Sem login, sem cadastro, sem coleta de dados.',
+        faq3_q: 'Quais resoluções são suportadas?',
+        faq3_a: 'Papéis de parede para desktop em 3840 × 2160 (4K). Para iPhone em 1290 × 2796. Ambos ficam nítidos em telas de alta resolução.',
+        faq4_q: 'Posso personalizar as cores?',
+        faq4_a: 'Com certeza. Escolha entre paletas predefinidas ou crie as suas. Alterne entre modos claro e escuro para cada padrão.',
+        faq5_q: 'Quais padrões estão disponíveis?',
+        faq5_a: 'Arcos, colinas, ondas, gradientes e mais — com novos padrões adicionados regularmente. Cada um suporta variações ilimitadas de cor e modo.'
+      }
+    };
+
+    var currentLang = 'en';
+
+    function detectLanguage() {
+      var lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      return lang.startsWith('pt') ? 'pt' : 'en';
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      var strings = translations[lang];
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (strings[key]) el.innerHTML = strings[key];
+      });
+      var toggle = document.getElementById('langToggle');
+      toggle.textContent = lang === 'pt' ? 'EN' : 'PT';
+      toggle.title = lang === 'pt' ? 'Switch to English' : 'Mudar para Português';
+    }
+
+    document.getElementById('langToggle').addEventListener('click', function() {
+      setLanguage(currentLang === 'en' ? 'pt' : 'en');
+    });
+
+    setLanguage(detectLanguage());
+
+    // ── Background stars ──
+    (function() {
+      var c = document.getElementById('bg');
+      var ctx = c.getContext('2d');
+      var stars = [];
+      var N = 14;
+
+      function resize() {
+        c.width = c.offsetWidth * devicePixelRatio;
+        c.height = c.offsetHeight * devicePixelRatio;
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      }
+
+      function drawStar(x, y, s, a) {
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.moveTo(x, y - s);
+        ctx.bezierCurveTo(x + s*0.06, y - s*0.25, x + s*0.25, y - s*0.06, x + s, y);
+        ctx.bezierCurveTo(x + s*0.25, y + s*0.06, x + s*0.06, y + s*0.25, x, y + s);
+        ctx.bezierCurveTo(x - s*0.06, y + s*0.25, x - s*0.25, y + s*0.06, x - s, y);
+        ctx.bezierCurveTo(x - s*0.25, y - s*0.06, x - s*0.06, y - s*0.25, x, y - s);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      resize();
+      var w = c.offsetWidth, h = c.offsetHeight;
+      for (var i = 0; i < N; i++) {
+        stars.push({ x: Math.random()*w, y: Math.random()*h, s: 3+Math.random()*16, a: 0.015+Math.random()*0.04, vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.1 });
+      }
+
+      function draw() {
+        var w = c.offsetWidth, h = c.offsetHeight;
+        ctx.clearRect(0, 0, w, h);
+        for (var i = 0; i < stars.length; i++) {
+          var s = stars[i];
+          s.x += s.vx; s.y += s.vy;
+          if (s.x < -20) s.x = w+20; if (s.x > w+20) s.x = -20;
+          if (s.y < -20) s.y = h+20; if (s.y > h+20) s.y = -20;
+          drawStar(s.x, s.y, s.s, s.a);
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      draw();
+    })();
+
+    // ── Dark/Light slider ──
+    (function() {
+      var container = document.getElementById('modeSlider');
+      var lightLayer = document.getElementById('sliderLight');
+      var handle = document.getElementById('sliderHandle');
+      var arrows = document.getElementById('sliderArrows');
+      var dragging = false;
+
+      function setPosition(x) {
+        var rect = container.getBoundingClientRect();
+        var pct = ((x - rect.left) / rect.width) * 100;
+        pct = Math.max(2, Math.min(98, pct));
+        lightLayer.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+        handle.style.left = pct + '%';
+        arrows.style.left = pct + '%';
+      }
+
+      container.addEventListener('mousedown', function(e) { dragging = true; setPosition(e.clientX); });
+      document.addEventListener('mousemove', function(e) { if (dragging) setPosition(e.clientX); });
+      document.addEventListener('mouseup', function() { dragging = false; });
+      container.addEventListener('touchstart', function(e) { dragging = true; setPosition(e.touches[0].clientX); }, { passive: true });
+      document.addEventListener('touchmove', function(e) { if (dragging) setPosition(e.touches[0].clientX); }, { passive: true });
+      document.addEventListener('touchend', function() { dragging = false; });
+    })();
+
+    // ── Scroll reveal ──
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+    // ── FAQ toggle ──
+    document.querySelectorAll('.faq-question').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.parentElement;
+        var wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // ── Smooth scroll ──
+    document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
